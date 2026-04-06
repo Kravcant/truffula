@@ -94,7 +94,7 @@ Update your `printTree()` so that the files/folders are sorted alphabetically. U
 It should now finally pass the provided test! Congrats!
 
 ## Wave 8: Creating a command line utility
-In this wave we will make it so that you can call truffula from the command line. We will do it in two steps, first creating an executable JAR file, then adding it to our PATH. There are a lot of steps to this wave, but don't worry, it's all just copying commands. Have EVERY PARTNER run all these commands. You will not need to commit anything from this wave.
+In this wave we will make it so that you can call truffula from the command line. We will do it in two steps, first creating an executable JAR file, then adding it to our PATH. There are a lot of steps to this wave, but don't worry, it's all just copying commands. You will not need to commit anything from this wave.
 
 ### Creating an executable JAR
 JAR is short for "Java Archive". It's a collection of our compiled code that we can share with others. You may have noticed in the lib folder that there is a JAR for JUnit. This is how we've been able to use all of the JUnit functionality.
@@ -163,7 +163,7 @@ These steps are for Mac computers. Please skip to the Windows section if on Wind
    ```
    truffula ~
    ```
-   This should show the entire contents of your home directory. It will be huge! You may get a pop-up asking for permission to open other files. Say yes. Congrats! You've made a real command line utility! Feel free to use it your day-to-day work. Congratulate your partner and take a well-deserved break.
+   This should show the entire contents of your home directory. It will be huge! You may get a pop-up asking for permission to open other files. Say yes. Congrats! You've made a real command line utility! Feel free to use it your day-to-day work. Congratulate yourself and take a well-deserved break.
 
 ### Placing the JAR on the path (Windows)
 1. Open a new Git Bash terminal. THIS WILL NOT WORK IN POWERSHELL. Navigate to the root of truffula project directory using `cd`.
@@ -210,4 +210,4 @@ These steps are for Mac computers. Please skip to the Windows section if on Wind
    ```
    truffula ~
    ```
-   This should show the entire contents of your home directory. It will be huge! You may get a pop-up asking for permission to open other files. Say yes. Congrats! You've made a real command line utility! Feel free to use it your day-to-day work. Congratulate your partner and take a well-deserved break.
+   This should show the entire contents of your home directory. It will be huge! You may get a pop-up asking for permission to open other files. Say yes. Congrats! You've made a real command line utility! Feel free to use it your day-to-day work. Congratulate yourself and take a well-deserved break.
