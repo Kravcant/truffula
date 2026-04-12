@@ -14,8 +14,12 @@ PLEASE MAKE FREQUENT COMMITS AS YOU FILL OUT THIS FILE.
 - Used to change the color of certain text on the console
 
 ## TruffulaOptions.java / TruffulaOptionsTest.java
-
+- Provides different options for displaying directory trees
+- Can change the path which to print the tree, or set flags to disable certain things
 
 ## TruffulaPrinter.java / TruffulaPrinterTest.java
+- Prints the tree directory with optional colors
+- Can also sort files and directories
 
 ## AlphabeticalFileSorter.java
+- Sorts an array of files in alphabetical order, ignoring cases
