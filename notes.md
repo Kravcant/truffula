@@ -4,12 +4,17 @@ As part of Wave 0, please fill out notes for each of the below files. They are i
 PLEASE MAKE FREQUENT COMMITS AS YOU FILL OUT THIS FILE.
 
 ## App.java
+- Creates a directory tree
+- Can show hidden files, use different colored texts, and choose the root where to start the printing
 
 ## ConsoleColor.java
+- Determines the text colors that can be used on the console
 
 ## ColorPrinter.java / ColorPrinterTest.java
+- Used to change the color of certain text on the console
 
 ## TruffulaOptions.java / TruffulaOptionsTest.java
+
 
 ## TruffulaPrinter.java / TruffulaPrinterTest.java
 
