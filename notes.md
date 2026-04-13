@@ -19,7 +19,9 @@ print from it
 
 ## TruffulaOptions.java / TruffulaOptionsTest.java
 - Provides different options for displaying directory trees
-- Can change the path which to print the tree, or set flags to disable certain things
+- Can change the path which to print the tree, or set flags to toggle certain things
+- Flags can either show hidden files, or disable color texts
+- TruffulaOptions objects can eithwr be created with an array of arguments, or by explicitly listing the values
 
 ## TruffulaPrinter.java / TruffulaPrinterTest.java
 - Prints the tree directory with optional colors
