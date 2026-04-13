@@ -26,6 +26,7 @@ print from it
 ## TruffulaPrinter.java / TruffulaPrinterTest.java
 - Prints the tree directory with optional colors
 - Can also sort files and directories
+- Uses /tmp to create and display files and directories
 
 ## AlphabeticalFileSorter.java
 - Sorts an array of files in alphabetical order, ignoring cases
