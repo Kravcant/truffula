@@ -9,9 +9,13 @@ PLEASE MAKE FREQUENT COMMITS AS YOU FILL OUT THIS FILE.
 
 ## ConsoleColor.java
 - Determines the text colors that can be used on the console
+- Colors are identified as enums that can be manually set for the printStream
 
 ## ColorPrinter.java / ColorPrinterTest.java
 - Used to change the color of certain text on the console
+- Creates a printStream that you can set the color for, and the selected color will apply to any messages you
+print from it
+- Print statements can be toggled to automatically reset the color after a statement is printed
 
 ## TruffulaOptions.java / TruffulaOptionsTest.java
 - Provides different options for displaying directory trees
