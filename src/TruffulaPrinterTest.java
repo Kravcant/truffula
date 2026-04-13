@@ -149,4 +149,34 @@ public class TruffulaPrinterTest {
         // Assert that the output matches the expected output exactly
         assertEquals(expected.toString(), output);
     }
+
+    @Test
+    public void testPrintTree_SimpleStructure_NoColorNoOrder(@TempDir File tempDir) throws IOException {
+        // Build a flat directory structure:
+        // simpleFolder/
+        //    file1.txt
+        //    file2.txt
+
+        File simpleFolder = new File(tempDir, "simpleFolder");
+        assertTrue(simpleFolder.mkdir());
+
+        new File(simpleFolder, "file1.txt").createNewFile();
+        new File(simpleFolder, "file2.txt").createNewFile();
+
+        TruffulaOptions options = new TruffulaOptions(simpleFolder, false, false);
+
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(bytes);
+        TruffulaPrinter printer = new TruffulaPrinter(options, printStream);
+
+        printer.printTree();
+
+        String output = bytes.toString();
+
+        // Check structure is present without enforcing order or color
+        assertTrue(output.contains("simpleFolder/"), "Should contain root folder name");
+        assertTrue(output.contains("file1.txt"), "Should contain file1.txt");
+        assertTrue(output.contains("file2.txt"), "Should contain file2.txt");
+        assertTrue(output.contains("   file"), "Should have 3-space indentation");
+    }
 }
