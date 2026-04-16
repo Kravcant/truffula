@@ -183,39 +183,79 @@ public class TruffulaPrinterTest {
 
     @Test
     public void testPrintTree_HiddenFilesNotShown_WhenShowHiddenFalse(@TempDir File tempDir) throws IOException {
-    // Build structure:
-    // testFolder/
-    //    visible.txt
-    //    .hidden.txt      ← should NOT appear
-    //    .hiddenSub/      ← should NOT appear (nor its contents)
-    //       secret.txt
+        // Build structure:
+        // testFolder/
+        //    visible.txt
+        //    .hidden.txt      ← should NOT appear
+        //    .hiddenSub/      ← should NOT appear (nor its contents)
+        //       secret.txt
 
-    File testFolder = new File(tempDir, "testFolder");
-    assertTrue(testFolder.mkdir());
+        File testFolder = new File(tempDir, "testFolder");
+        assertTrue(testFolder.mkdir());
 
-    new File(testFolder, "visible.txt").createNewFile();
-    createHiddenFile(testFolder, ".hidden.txt");
+        new File(testFolder, "visible.txt").createNewFile();
+        createHiddenFile(testFolder, ".hidden.txt");
 
-    File hiddenSub = new File(testFolder, ".hiddenSub");
-    hiddenSub.mkdir();
-    if (isWindows()) {
-        Path path = Paths.get(hiddenSub.toURI());
-        Files.setAttribute(path, "dos:hidden", Boolean.TRUE, LinkOption.NOFOLLOW_LINKS);
+        File hiddenSub = new File(testFolder, ".hiddenSub");
+        hiddenSub.mkdir();
+        if (isWindows()) {
+            Path path = Paths.get(hiddenSub.toURI());
+            Files.setAttribute(path, "dos:hidden", Boolean.TRUE, LinkOption.NOFOLLOW_LINKS);
+        }
+        new File(hiddenSub, "secret.txt").createNewFile();
+
+        TruffulaOptions options = new TruffulaOptions(testFolder, false, false);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        TruffulaPrinter printer = new TruffulaPrinter(options, new PrintStream(baos));
+        printer.printTree();
+
+        String output = baos.toString();
+
+        assertTrue(output.contains("testFolder/"),  "Should show root folder");
+        assertTrue(output.contains("visible.txt"),   "Should show visible file");
+        assertFalse(output.contains(".hidden.txt"),  "Should NOT show hidden file");
+        assertFalse(output.contains(".hiddenSub"),   "Should NOT show hidden directory");
+        assertFalse(output.contains("secret.txt"),   "Should NOT show contents of hidden directory");
     }
-    new File(hiddenSub, "secret.txt").createNewFile();
 
-    TruffulaOptions options = new TruffulaOptions(testFolder, false, false);
+    @Test
+        public void testPrintTree_ColorCyclesByDepth(@TempDir File tempDir) throws IOException {
+        // Build structure:
+        // rootDir/
+        //    file.txt       ← depth 1: PURPLE
+        //    subDir/        ← depth 1: PURPLE
+        //       nested.txt  ← depth 2: YELLOW
 
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    TruffulaPrinter printer = new TruffulaPrinter(options, new PrintStream(baos));
-    printer.printTree();
+        File rootDir = new File(tempDir, "rootDir");
+        assertTrue(rootDir.mkdir());
+        new File(rootDir, "file.txt").createNewFile();
+        File subDir = new File(rootDir, "subDir");
+        assertTrue(subDir.mkdir());
+        new File(subDir, "nested.txt").createNewFile();
 
-    String output = baos.toString();
+        TruffulaOptions options = new TruffulaOptions(rootDir, false, true);
 
-    assertTrue(output.contains("testFolder/"),  "Should show root folder");
-    assertTrue(output.contains("visible.txt"),   "Should show visible file");
-    assertFalse(output.contains(".hidden.txt"),  "Should NOT show hidden file");
-    assertFalse(output.contains(".hiddenSub"),   "Should NOT show hidden directory");
-    assertFalse(output.contains("secret.txt"),   "Should NOT show contents of hidden directory");
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        TruffulaPrinter printer = new TruffulaPrinter(options, new PrintStream(baos));
+        printer.printTree();
+
+        String output = baos.toString();
+        String nl = System.lineSeparator();
+        String reset = ConsoleColor.RESET.toString();
+
+        // Root is depth 0: WHITE
+        assertTrue(output.contains(ConsoleColor.WHITE + "rootDir/" + nl + reset),
+            "Root should be WHITE");
+
+        // depth 1 items (file.txt and subDir/) should be PURPLE
+        assertTrue(output.contains(ConsoleColor.PURPLE + "   file.txt" + nl + reset),
+            "Depth 1 file should be PURPLE");
+        assertTrue(output.contains(ConsoleColor.PURPLE + "   subDir/" + nl + reset),
+            "Depth 1 directory should be PURPLE");
+
+        // depth 2 items (nested.txt) should be YELLOW
+        assertTrue(output.contains(ConsoleColor.YELLOW + "      nested.txt" + nl + reset),
+            "Depth 2 file should be YELLOW");
     }
 }
