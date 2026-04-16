@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TruffulaPrinterTest {
@@ -178,5 +179,43 @@ public class TruffulaPrinterTest {
         assertTrue(output.contains("file1.txt"), "Should contain file1.txt");
         assertTrue(output.contains("file2.txt"), "Should contain file2.txt");
         assertTrue(output.contains("   file"), "Should have 3-space indentation");
+    }
+
+    @Test
+    public void testPrintTree_HiddenFilesNotShown_WhenShowHiddenFalse(@TempDir File tempDir) throws IOException {
+    // Build structure:
+    // testFolder/
+    //    visible.txt
+    //    .hidden.txt      ← should NOT appear
+    //    .hiddenSub/      ← should NOT appear (nor its contents)
+    //       secret.txt
+
+    File testFolder = new File(tempDir, "testFolder");
+    assertTrue(testFolder.mkdir());
+
+    new File(testFolder, "visible.txt").createNewFile();
+    createHiddenFile(testFolder, ".hidden.txt");
+
+    File hiddenSub = new File(testFolder, ".hiddenSub");
+    hiddenSub.mkdir();
+    if (isWindows()) {
+        Path path = Paths.get(hiddenSub.toURI());
+        Files.setAttribute(path, "dos:hidden", Boolean.TRUE, LinkOption.NOFOLLOW_LINKS);
+    }
+    new File(hiddenSub, "secret.txt").createNewFile();
+
+    TruffulaOptions options = new TruffulaOptions(testFolder, false, false);
+
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    TruffulaPrinter printer = new TruffulaPrinter(options, new PrintStream(baos));
+    printer.printTree();
+
+    String output = baos.toString();
+
+    assertTrue(output.contains("testFolder/"),  "Should show root folder");
+    assertTrue(output.contains("visible.txt"),   "Should show visible file");
+    assertFalse(output.contains(".hidden.txt"),  "Should NOT show hidden file");
+    assertFalse(output.contains(".hiddenSub"),   "Should NOT show hidden directory");
+    assertFalse(output.contains("secret.txt"),   "Should NOT show contents of hidden directory");
     }
 }
