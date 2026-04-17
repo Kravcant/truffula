@@ -125,7 +125,7 @@ public class TruffulaPrinter {
   }
 
   private void printTree(File dir, String indent, int depth) {
-    File[] files = dir.listFiles();
+    File[] files = AlphabeticalFileSorter.sort(dir.listFiles());
     if (files == null) return;
     for (File file : files) {
       if (!options.isShowHidden() && file.isHidden()) continue;
